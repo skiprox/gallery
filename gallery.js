@@ -46,6 +46,7 @@ proto._establishObjectProperties = function(containerEl, obj) {
     // The settings
     this.settings.ease = obj.ease || 'ease';
     this.settings.duration = obj.duration || 400;
+    this.settings.threshold = obj.threshold || 0.5;
 
     // The elements
     this.elem.galleryWrapper = document.querySelector(containerEl);
@@ -151,12 +152,22 @@ proto._galleryPanEnd = function(e) {
 	// If the movement is more than 50% of the width, then we trigger a move on the slide
 	console.log('half of the movement', Math.abs(e.deltaX));
 	console.log('slide width', this.props.slideWidth);
-	if (Math.abs(e.deltaX) >= this.props.slideWidth/2) {
+	if (Math.abs(e.deltaX) >= this.props.slideWidth*this.settings.threshold) {
 		if (e.deltaX > 0) {
-			this.moveLeft();
+			if (this.props.currentSlide === 0) {
+				this.moveToCurrent();
+			}
+			else {
+				this.moveLeft();
+			}
 		}
 		else {
-			this.moveRight();
+			if (this.props.currentSlide >= this.props.totalSlides-1) {
+				this.moveToCurrent();
+			}
+			else {
+				this.moveRight();
+			}
 		}
 	}
 	else {

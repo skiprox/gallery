@@ -7,7 +7,11 @@ var Main = (function() {
 
 	return {
 		init : function() {
-			window.testGallery = new gallery('.gallery-wrapper', {});
+			window.testGallery = new gallery('.gallery-wrapper', {
+				ease: 'ease-out',
+				duration: 300,
+				threshold: 0.2
+			});
 			return this;
 		}
 	};

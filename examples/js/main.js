@@ -40,8 +40,8 @@ function Gallery(containerEl, obj) {
     this.elem = {};
     this._establishObjectProperties(containerEl, obj);
 
-    // Add necessary transitions
-    this._addTransitions();
+    // Add necessary styles
+    this._addStyles();
 
     // Referencing the bound listeners
     this.moveLeft = this.moveLeft.bind(this);
@@ -77,17 +77,21 @@ proto._establishObjectProperties = function(containerEl, obj) {
 /**
  * Add transitions to the elems that need them to animate the slides
  */
-proto._addTransitions = function() {
+proto._addStyles = function() {
     this.elem.gallery.style.transition = 'transform ' + this.settings.duration + 'ms ' + this.settings.ease;
+	this.elem.leftNav.style.opacity = 0;
 };
 
 proto._addListeners = function() {
+	// Click events
     this.elem.leftNav.addEventListener('click', this.moveLeft);
     this.elem.rightNav.addEventListener('click', this.moveRight);
 };
 
 proto._removeListeners = function() {
-
+	// Click events
+	this.elem.leftNav.removeEventListener('click', this.moveLeft);
+    this.elem.rightNav.removeEventListener('click', this.moveRight);
 };
 
 /**
@@ -100,8 +104,8 @@ proto.moveLeft = function() {
     else {
         this.props.currentSlide--;
         this.elem.gallery.style.transform = 'translateX(' + -(this.props.currentSlide * 100) + '%)';
-        console.log('we should move left');
     }
+    this._checkForPaddles();
 };
 
 /**
@@ -114,8 +118,24 @@ proto.moveRight = function() {
     else {
         this.props.currentSlide++;
         this.elem.gallery.style.transform = 'translateX(' + -(this.props.currentSlide * 100) + '%)';
-        console.log('we should move right');
     }
+    this._checkForPaddles();
+};
+
+/**
+ * Check if we should hide/show the paddles
+ */
+proto._checkForPaddles = function() {
+	if (this.props.currentSlide == 0) {
+		this.elem.leftNav.style.opacity = 0;
+	}
+	else if (this.props.currentSlide >= this.props.totalSlides-1) {
+		this.elem.rightNav.style.opacity = 0;
+	}
+	else {
+		this.elem.leftNav.style.opacity = 1;
+		this.elem.rightNav.style.opacity = 1;
+	}
 };
 
 /**
@@ -431,31 +451,6 @@ function isUndefined(arg) {
 }
 
 },{}],4:[function(require,module,exports){
-if (typeof Object.create === 'function') {
-  // implementation from standard node.js 'util' module
-  module.exports = function inherits(ctor, superCtor) {
-    ctor.super_ = superCtor
-    ctor.prototype = Object.create(superCtor.prototype, {
-      constructor: {
-        value: ctor,
-        enumerable: false,
-        writable: true,
-        configurable: true
-      }
-    });
-  };
-} else {
-  // old school shim for old browsers
-  module.exports = function inherits(ctor, superCtor) {
-    ctor.super_ = superCtor
-    var TempCtor = function () {}
-    TempCtor.prototype = superCtor.prototype
-    ctor.prototype = new TempCtor()
-    ctor.prototype.constructor = ctor
-  }
-}
-
-},{}],5:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -547,6 +542,31 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 process.umask = function() { return 0; };
+
+},{}],5:[function(require,module,exports){
+if (typeof Object.create === 'function') {
+  // implementation from standard node.js 'util' module
+  module.exports = function inherits(ctor, superCtor) {
+    ctor.super_ = superCtor
+    ctor.prototype = Object.create(superCtor.prototype, {
+      constructor: {
+        value: ctor,
+        enumerable: false,
+        writable: true,
+        configurable: true
+      }
+    });
+  };
+} else {
+  // old school shim for old browsers
+  module.exports = function inherits(ctor, superCtor) {
+    ctor.super_ = superCtor
+    var TempCtor = function () {}
+    TempCtor.prototype = superCtor.prototype
+    ctor.prototype = new TempCtor()
+    ctor.prototype.constructor = ctor
+  }
+}
 
 },{}],6:[function(require,module,exports){
 module.exports = function isBuffer(arg) {
@@ -1145,4 +1165,4 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":6,"_process":5,"inherits":4}]},{},[1]);
+},{"./support/isBuffer":6,"_process":4,"inherits":5}]},{},[1]);

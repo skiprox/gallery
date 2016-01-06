@@ -20,8 +20,8 @@ function Gallery(containerEl, obj) {
     this.elem = {};
     this._establishObjectProperties(containerEl, obj);
 
-    // Add necessary transitions
-    this._addTransitions();
+    // Add necessary styles
+    this._addStyles();
 
     // Referencing the bound listeners
     this.moveLeft = this.moveLeft.bind(this);
@@ -57,17 +57,21 @@ proto._establishObjectProperties = function(containerEl, obj) {
 /**
  * Add transitions to the elems that need them to animate the slides
  */
-proto._addTransitions = function() {
+proto._addStyles = function() {
     this.elem.gallery.style.transition = 'transform ' + this.settings.duration + 'ms ' + this.settings.ease;
+	this.elem.leftNav.style.opacity = 0;
 };
 
 proto._addListeners = function() {
+	// Click events
     this.elem.leftNav.addEventListener('click', this.moveLeft);
     this.elem.rightNav.addEventListener('click', this.moveRight);
 };
 
 proto._removeListeners = function() {
-
+	// Click events
+	this.elem.leftNav.removeEventListener('click', this.moveLeft);
+    this.elem.rightNav.removeEventListener('click', this.moveRight);
 };
 
 /**
@@ -80,8 +84,8 @@ proto.moveLeft = function() {
     else {
         this.props.currentSlide--;
         this.elem.gallery.style.transform = 'translateX(' + -(this.props.currentSlide * 100) + '%)';
-        console.log('we should move left');
     }
+    this._checkForPaddles();
 };
 
 /**
@@ -94,8 +98,24 @@ proto.moveRight = function() {
     else {
         this.props.currentSlide++;
         this.elem.gallery.style.transform = 'translateX(' + -(this.props.currentSlide * 100) + '%)';
-        console.log('we should move right');
     }
+    this._checkForPaddles();
+};
+
+/**
+ * Check if we should hide/show the paddles
+ */
+proto._checkForPaddles = function() {
+	if (this.props.currentSlide == 0) {
+		this.elem.leftNav.style.opacity = 0;
+	}
+	else if (this.props.currentSlide >= this.props.totalSlides-1) {
+		this.elem.rightNav.style.opacity = 0;
+	}
+	else {
+		this.elem.leftNav.style.opacity = 1;
+		this.elem.rightNav.style.opacity = 1;
+	}
 };
 
 /**

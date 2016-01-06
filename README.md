@@ -1,49 +1,51 @@
 # gallery
 
-A gallery factory
-
-## Documentation
-Document appropriate module events, methods and properties.
-
-
-### Gallery Events
-List all events here.
-
-* `Gallery.fakeEvent` - just an example to follow
+A way to create galleries with touch support.
 
 
 
-### Gallery Methods
+### Public Gallery Methods
 List all public methods here.  CamelCase method names.  Do not include private methods.
 
-* `Gallery.fakeMethod` - just an example to follow; include parameters if applicable
-
-
-
-### Private Gallery Properties
-List all properties that should be assumed to be private.  Name private properties with two leading underscores so other developers know these properties are intended to be private.
-
-* `@property {boolean} toBeRemoved` - just an example to follow
-
-
-
-### Private Gallery Methods
-List all methods that should be assumed to be private here.  Name private methods with two leading underscores so other developers know these methods are intended to be private.
-
-* `Gallery.__fakeMethod` - just an example to follow; include parameters if applicable
+* `Gallery.moveLeft` - move the gallery to the left
+* `Gallery.moveRight` - move the gallery to the right
+* `Gallery.moveToCurrent` - move the gallery back to the current slide
 
 
 
 ## Usage
-Explain how the module is used in all appropriate contexts.
+To use, your markup should look something like this:
 
+```
+<div id="gallery-wrapper" class="gallery-wrapper">
+	<div class="gallery-inner">
+		<ul class="gallery">
+			<li class="gallery-item">
+			</li><li class="gallery-item">
+			</li><li class="gallery-item">
+			</li><li class="gallery-item">
+			</li><li class="gallery-item">
+			</li>
+		</ul>
+	</div>
+	<div class="nav">
+		<span class="left"></span>
+		<span class="right"></span>
+	</div>
+</div>
+```
 
+and then just create a new gallery with:
+
+`var gallery = new gallery('.gallery-wrapper', {ease: 'ease', duration: 600})`
 
 ### Examples
-Illustrate usage of the module with a few examples.  Include basic and advanced examples when applicable.
+See examples/index.html
 
 
 
-## Known issues
-Document any known issues here.
+## Necessary Changes/Improvements
+
+* Get rid of hammerjs npm requirement, just use standard touch events.
+* Clean up markup to 
 

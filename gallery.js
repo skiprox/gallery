@@ -2,6 +2,7 @@
 
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('util').inherits;
+var Hammer = require('hammerjs');
 
 /**
  * A Gallery Factory
@@ -18,10 +19,12 @@ function Gallery(containerEl, obj) {
     this.settings = {};
     this.props = {};
     this.elem = {};
+    this.hammer = null;
     this._establishObjectProperties(containerEl, obj);
 
     // Add necessary styles
-    this._addStyles();
+    this._addTransitions();
+    this.elem.leftNav.style.opacity = 0;
 
     // Referencing the bound listeners
     this.moveLeft = this.moveLeft.bind(this);
@@ -52,20 +55,34 @@ proto._establishObjectProperties = function(containerEl, obj) {
     // The properties
     this.props.currentSlide = 0;
     this.props.totalSlides = this.elem.slides.length;
+    this.props.slideWidth = this.elem.gallery.clientWidth;
+
+    // The hammer (touch)
+    this.hammer = new Hammer(this.elem.gallery, {preventDefault: true});
 };
 
 /**
  * Add transitions to the elems that need them to animate the slides
  */
-proto._addStyles = function() {
+proto._addTransitions = function() {
     this.elem.gallery.style.transition = 'transform ' + this.settings.duration + 'ms ' + this.settings.ease;
-	this.elem.leftNav.style.opacity = 0;
+};
+
+/**
+ * Remove transitions on the gallery element
+ */
+proto._removeTransitions = function() {
+	this.elem.gallery.style.transition = null;
 };
 
 proto._addListeners = function() {
 	// Click events
     this.elem.leftNav.addEventListener('click', this.moveLeft);
     this.elem.rightNav.addEventListener('click', this.moveRight);
+
+    // Hammer events
+    this.hammer.on('pan', this._galleryPan.bind(this));
+    this.hammer.on('panend', this._galleryPanEnd.bind(this));
 };
 
 proto._removeListeners = function() {
@@ -77,13 +94,14 @@ proto._removeListeners = function() {
 /**
  * Move the gallery to the left, if applicable
  */
-proto.moveLeft = function() {
+proto.moveLeft = function(e) {
+	this._addTransitions();
     if (this.props.currentSlide === 0) {
         return false;
     }
     else {
         this.props.currentSlide--;
-        this.elem.gallery.style.transform = 'translateX(' + -(this.props.currentSlide * 100) + '%)';
+        this.elem.gallery.style.transform = 'translateX(' + -(this.props.currentSlide * this.props.slideWidth) + 'px)';
     }
     this._checkForPaddles();
 };
@@ -91,15 +109,53 @@ proto.moveLeft = function() {
 /**
  * Move the gallery to the right, if applicable
  */
-proto.moveRight = function() {
+proto.moveRight = function(e) {
+	this._addTransitions();
     if (this.props.currentSlide >= this.props.totalSlides-1) {
         return false;
     }
     else {
         this.props.currentSlide++;
-        this.elem.gallery.style.transform = 'translateX(' + -(this.props.currentSlide * 100) + '%)';
+        this.elem.gallery.style.transform = 'translateX(' + -(this.props.currentSlide * this.props.slideWidth) + 'px)';
     }
     this._checkForPaddles();
+};
+
+/**
+ * Move back to the current slide (for swiping)
+ */
+proto.moveToCurrent = function() {
+	this._addTransitions();
+	this.elem.gallery.style.transform = 'translateX(' + -(this.props.currentSlide * this.props.slideWidth) + 'px)';
+};
+
+/**
+ * Triggers when the gallery is panned (using Hammer)
+ */
+proto._galleryPan = function(e) {
+	this._removeTransitions();
+	this.elem.gallery.style.transform = 'translateX(' + (e.deltaX - (this.props.currentSlide * this.props.slideWidth)) + 'px)';
+};
+
+/**
+ * Triggers when the panning stops on the gallery
+ */
+proto._galleryPanEnd = function(e) {
+	console.log(e.deltaX);
+	// If the movement is more than 50% of the width, then we trigger a move on the slide
+	console.log('half of the movement', Math.abs(e.deltaX));
+	console.log('slide width', this.props.slideWidth);
+	if (Math.abs(e.deltaX) >= this.props.slideWidth/2) {
+		if (e.deltaX > 0) {
+			this.moveLeft();
+		}
+		else {
+			this.moveRight();
+		}
+	}
+	else {
+		this.moveToCurrent();
+	}
 };
 
 /**

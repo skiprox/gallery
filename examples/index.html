@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+		}
+		.gallery-wrapper {
+			width: 800px;
+			margin: 20px auto 0;
+			max-width: 100%;
+			min-height: 400px;
+			position: relative;
+		}
+		.gallery-wrapper:hover .nav {
+			opacity: 1;
+		}
+		.gallery-inner {
+			width: 100%;
+			height: 100%;
+			position: relative;
+			overflow: hidden;
+		}
+		ul, li {
+			list-style: none;
+		}
+		.gallery {
+			white-space: nowrap;
+		}
+		.gallery-item {
+			max-width: 100%;
+			display: inline-block;
+		}
+		.gallery-image {
+			max-width: 100%;
+		}
+		.nav {
+			position: absolute;
+			width: 100%;
+			height: 1px;
+			top: 50%;
+			opacity: 0;
+			transition: opacity 0.33s ease;
+		}
+		.left, .right {
+			width: 100px;
+			height: 100px;
+			display: block;
+			background-color: red;
+			position: absolute;
+			margin-top: -50px;
+			margin-left: -50px;
+		}
+		.right {
+			right: -50px;
+		}
+		.left:before, .left:after, .right:before, .right:after {
+			content: '';
+			display: block;
+			position: absolute;
+			width: 80px;
+			height: 4px;
+			background-color:white;
+		}
+		.left:before {
+			top: 50%;
+			transform: rotate(-15deg);
+			left: 5px;
+			margin-top: -10px;
+		}
+		.left:after {
+			top: 50%;
+			transform: rotate(15deg);
+			left: 5px;
+			margin-top: 10px;
+		}
+		.right:before {
+			top: 50%;
+			transform: rotate(15deg);
+			right: 5px;
+			margin-top: -10px;
+		}
+		.right:after {
+			top: 50%;
+			transform: rotate(-15deg);
+			right: 5px;
+			margin-top: 10px;
+		}
+	</style>
+</head>
+<body>
+
+	<div id="gallery-wrapper" class="gallery-wrapper">
+		<div class="gallery-inner">
+			<ul class="gallery">
+				<li class="gallery-item">
+					<img src="http://placehold.it/1400x800" class="gallery-image" alt="">
+				</li><li class="gallery-item">
+					<img src="http://placehold.it/1400x800" class="gallery-image" alt="">
+				</li><li class="gallery-item">
+					<img src="http://placehold.it/1400x800" class="gallery-image" alt="">
+				</li><li class="gallery-item">
+					<img src="http://placehold.it/1400x800" class="gallery-image" alt="">
+				</li><li class="gallery-item">
+					<img src="http://placehold.it/1400x800" class="gallery-image" alt="">
+				</li>
+			</ul>
+		</div>
+		<div class="nav">
+			<span class="left"></span>
+			<span class="right"></span>
+		</div>
+	</div>
+	
+	<script type="text/javascript" src="js/main.js"></script>
+</body>
+</html>

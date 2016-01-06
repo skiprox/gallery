@@ -1,0 +1,40 @@
+{
+  "name": "gallery",
+  "version": "0.1.0",
+  "description": "A gallery factory",
+  "main": "gallery.js",
+  "directories": {
+    "examples": "examples"
+  },
+  "dependencies": {
+    "events": "^1.1.0",
+    "util": "^0.10.3"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-browserify": "^3.2.1",
+    "grunt-contrib-watch": "^0.6.1",
+    "jshint": "~2.5.11",
+    "load-grunt-tasks": "^1.0.0"
+  },
+  "scripts": {
+    "start": "node gallery",
+    "test": "jshint --verbose gallery.js examples/main.js; jshint --config=.jshintpkg package.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kettle/gallery"
+  },
+  "homepage": "https://github.com/kettle/gallery",
+  "bugs": {
+    "url": "https://github.com/kettle/gallery/issues"
+  },
+  "author": "skiprox <seanmichaelscanlan@gmail.com>",
+  "publishConfig": {
+    "registry": "http://npm.kettlenyc.com:4873/"
+  },
+  "license": "© 2014 Kettle Solutions, LLC",
+  "engine": {
+    "node": ">=0.6"
+  }
+}

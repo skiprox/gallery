@@ -49,6 +49,8 @@ function Gallery(containerEl, obj) {
     // Referencing the bound listeners
     this.moveLeft = this.moveLeft.bind(this);
     this.moveRight = this.moveRight.bind(this);
+    this._galleryPan = this._galleryPan.bind(this);
+    this._galleryPanEnd = this._galleryPanEnd.bind(this);
 
     // Add the event listeners
     this._addListeners();
@@ -101,14 +103,18 @@ proto._addListeners = function() {
     this.elem.rightNav.addEventListener('click', this.moveRight);
 
     // Hammer events
-    this.hammer.on('pan', this._galleryPan.bind(this));
-    this.hammer.on('panend', this._galleryPanEnd.bind(this));
+    this.hammer.on('pan', this._galleryPan);
+    this.hammer.on('panend', this._galleryPanEnd);
 };
 
 proto._removeListeners = function() {
 	// Click events
 	this.elem.leftNav.removeEventListener('click', this.moveLeft);
     this.elem.rightNav.removeEventListener('click', this.moveRight);
+
+    // Hammer events
+    this.hammer.off('pan', this._galleryPan);
+    this.hammer.off('panend', this._galleryPanEnd);
 };
 
 /**
@@ -198,7 +204,12 @@ proto._checkForPaddles = function() {
  * Destroys the gallery
  */
 proto.destroy = function() {
-
+	this._removeListeners();
+	this.hammer.destroy();
+	this.settings = null;
+    this.props = null;
+    this.elem = null;
+    this.hammer = null;
 };
 
 module.exports = Gallery;

@@ -9,8 +9,8 @@ var Main = (function() {
 		init : function() {
 			window.testGallery = new gallery('.gallery-wrapper', {
 				ease: 'ease-out',
-				duration: 300,
-				threshold: 0.2
+				duration: 400,
+				threshold: 0.33
 			});
 			return this;
 		}

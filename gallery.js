@@ -106,10 +106,8 @@ proto.moveLeft = function(e) {
     if (this.props.currentSlide === 0) {
         return false;
     }
-    else {
-        this.props.currentSlide--;
-        this.elem.gallery.style.transform = 'translateX(' + -(this.props.currentSlide * this.props.slideWidth) + 'px)';
-    }
+    this.props.currentSlide--;
+    this.elem.gallery.style.transform = 'translateX(' + -(this.props.currentSlide * this.props.slideWidth) + 'px)';
     this._checkForPaddles();
 };
 
@@ -121,10 +119,8 @@ proto.moveRight = function(e) {
     if (this.props.currentSlide >= this.props.totalSlides-1) {
         return false;
     }
-    else {
-        this.props.currentSlide++;
-        this._updateTransform(this.props.currentSlide, this.props.slideWidth);
-    }
+    this.props.currentSlide++;
+    this._updateTransform(this.props.currentSlide, this.props.slideWidth);
     this._checkForPaddles();
 };
 

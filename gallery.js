@@ -2,7 +2,14 @@
 
 var EventEmitter = require('events').EventEmitter;
 var inherits = require('util').inherits;
+var defaults = require('defaults');
 var Hammer = require('hammerjs');
+
+var defaultValues = {
+	ease: 'ease',
+	duration: 600,
+	threshold: 0.5
+};
 
 /**
  * A Gallery Factory
@@ -20,6 +27,7 @@ function Gallery(containerEl, obj) {
     this.props = {};
     this.elem = {};
     this.hammer = null;
+    obj = obj || {};
     this._establishObjectProperties(containerEl, obj);
 
     // Add necessary styles
@@ -44,9 +52,7 @@ var proto = Gallery.prototype;
 
 proto._establishObjectProperties = function(containerEl, obj) {
     // The settings
-    this.settings.ease = obj.ease || 'ease';
-    this.settings.duration = obj.duration || 400;
-    this.settings.threshold = obj.threshold || 0.5;
+    this.settings = defaults(obj, defaultValues);
 
     // The elements
     this.elem.galleryWrapper = document.querySelector(containerEl);

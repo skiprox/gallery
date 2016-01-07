@@ -7,6 +7,7 @@
     "examples": "examples"
   },
   "dependencies": {
+    "defaults": "^1.0.3",
     "events": "^1.1.0",
     "hammerjs": "^2.0.6",
     "util": "^0.10.3"

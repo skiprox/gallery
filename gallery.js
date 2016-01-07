@@ -146,6 +146,12 @@ proto._galleryPan = function(e) {
 	this._updateTransform(this.props.currentSlide, this.props.slideWidth, e.deltaX);
 };
 
+/**
+ * Update the transform on the gallery
+ * @param  {Float} currentSlide [The current slide number]
+ * @param  {Float} slideWidth   [The width of the slide]
+ * @param  {Float} deltaX       The delta x value of the mouse
+ */
 proto._updateTransform = function(currentSlide, slideWidth, deltaX) {
 	deltaX = deltaX || 0;
 	this.elem.gallery.style.transform = 'translateX(' + (deltaX - (currentSlide * slideWidth)) + 'px)';

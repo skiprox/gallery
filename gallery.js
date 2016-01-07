@@ -123,7 +123,7 @@ proto.moveRight = function(e) {
     }
     else {
         this.props.currentSlide++;
-        this.elem.gallery.style.transform = 'translateX(' + -(this.props.currentSlide * this.props.slideWidth) + 'px)';
+        this._updateTransform(this.props.currentSlide, this.props.slideWidth);
     }
     this._checkForPaddles();
 };
@@ -133,7 +133,7 @@ proto.moveRight = function(e) {
  */
 proto.moveToCurrent = function() {
 	this._addTransitions();
-	this.elem.gallery.style.transform = 'translateX(' + -(this.props.currentSlide * this.props.slideWidth) + 'px)';
+	this._updateTransform(this.props.currentSlide, this.props.slideWidth);
 };
 
 /**
@@ -141,17 +141,19 @@ proto.moveToCurrent = function() {
  */
 proto._galleryPan = function(e) {
 	this._removeTransitions();
-	this.elem.gallery.style.transform = 'translateX(' + (e.deltaX - (this.props.currentSlide * this.props.slideWidth)) + 'px)';
+	this._updateTransform(this.props.currentSlide, this.props.slideWidth, e.deltaX);
+};
+
+proto._updateTransform = function(currentSlide, slideWidth, deltaX) {
+	deltaX = deltaX || 0;
+	this.elem.gallery.style.transform = 'translateX(' + (deltaX - (currentSlide * slideWidth)) + 'px)';
 };
 
 /**
  * Triggers when the panning stops on the gallery
  */
 proto._galleryPanEnd = function(e) {
-	console.log(e.deltaX);
-	// If the movement is more than 50% of the width, then we trigger a move on the slide
-	console.log('half of the movement', Math.abs(e.deltaX));
-	console.log('slide width', this.props.slideWidth);
+	// If the movement is more than the threshold, then we trigger a move on the slide
 	if (Math.abs(e.deltaX) >= this.props.slideWidth*this.settings.threshold) {
 		if (e.deltaX > 0) {
 			if (this.props.currentSlide === 0) {

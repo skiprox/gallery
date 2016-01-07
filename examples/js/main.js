@@ -59,6 +59,7 @@ function Gallery(containerEl, obj) {
     this.moveRight = this.moveRight.bind(this);
     this._galleryPan = this._galleryPan.bind(this);
     this._galleryPanEnd = this._galleryPanEnd.bind(this);
+    this._onResize = this._onResize.bind(this);
 
     // Add the event listeners
     this._addListeners();
@@ -112,6 +113,9 @@ proto._addListeners = function() {
     // Hammer events
     this.hammer.on('pan', this._galleryPan);
     this.hammer.on('panend', this._galleryPanEnd);
+
+    // Resize event
+    window.addEventListener('resize', this._onResize);
 };
 
 proto._removeListeners = function() {
@@ -219,6 +223,14 @@ proto._checkForPaddles = function() {
 		this.elem.leftNav.style.opacity = 1;
 		this.elem.rightNav.style.opacity = 1;
 	}
+};
+
+/**
+ * Resizing function, recalculate the slide width and run the transform with this new width
+ */
+proto._onResize = function(e) {
+    this.props.slideWidth = this.elem.gallery.clientWidth;
+    this._updateTransform(this.props.currentSlide, this.props.slideWidth);
 };
 
 /**

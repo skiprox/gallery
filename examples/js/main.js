@@ -33,36 +33,38 @@ var defaultValues = {
 
 /**
  * A Gallery Factory
+ * @param {String} - containerEl: The query string for the container element
  * @param {Object} - Obj: The object of elements and other features
  *
  * *** @param {String} - ease: The ease on the gallery slide
  * *** @param {Float}  - duration: The duration of the slide
  */
 function Gallery(containerEl, obj) {
-    // Call the superclass constructor
-    EventEmitter.call(this);
+	// Call the superclass constructor
+	EventEmitter.call(this);
 
-    // Establish the properties of the object
-    this.settings = {};
-    this.props = {};
-    this.elem = {};
-    this.hammer = null;
-    obj = obj || {};
-    this._establishObjectProperties(containerEl, obj);
+	// Establish the properties of the object
+	this.settings = {};
+	this.props = {};
+	this.elem = {};
+	this.hammer = null;
+	obj = obj || {};
+	this._establishObjectProperties(containerEl, obj);
 
-    // Add necessary styles
-    this._addTransitions();
-    this.elem.leftNav.style.opacity = 0;
+	// Add necessary styles
+	this._addTransitions();
+	this.elem.leftNav.style.opacity = 0;
 
-    // Referencing the bound listeners
-    this.moveLeft = this.moveLeft.bind(this);
-    this.moveRight = this.moveRight.bind(this);
-    this._galleryPan = this._galleryPan.bind(this);
-    this._galleryPanEnd = this._galleryPanEnd.bind(this);
-    this._onResize = this._onResize.bind(this);
+	// Referencing the bound listeners
+	this.moveLeft = this.moveLeft.bind(this);
+	this.moveRight = this.moveRight.bind(this);
+	this.moveToPosition = this.moveToPosition.bind(this);
+	this._galleryPan = this._galleryPan.bind(this);
+	this._galleryPanEnd = this._galleryPanEnd.bind(this);
+	this._onResize = this._onResize.bind(this);
 
-    // Add the event listeners
-    this._addListeners();
+	// Add the event listeners
+	this._addListeners();
 }
 
 // Inherit from EventEmitter for Modal
@@ -72,30 +74,32 @@ inherits(Gallery, EventEmitter);
 var proto = Gallery.prototype;
 
 proto._establishObjectProperties = function(containerEl, obj) {
-    // The settings
-    this.settings = defaults(obj, defaultValues);
+	// The settings
+	this.settings = defaults(obj, defaultValues);
 
-    // The elements
-    this.elem.galleryWrapper = document.querySelector(containerEl);
-    this.elem.gallery = this.elem.galleryWrapper.querySelector('.gallery');
-    this.elem.slides = this.elem.galleryWrapper.querySelectorAll('.gallery-item');
-    this.elem.leftNav = this.elem.galleryWrapper.querySelector('.left');
-    this.elem.rightNav = this.elem.galleryWrapper.querySelector('.right');
+	// The elements
+	this.elem.galleryWrapper = document.querySelector(containerEl);
+	this.elem.gallery = this.elem.galleryWrapper.querySelector('.gallery');
+	this.elem.slides = this.elem.galleryWrapper.querySelectorAll('.gallery-item');
+	this.elem.leftNav = this.elem.galleryWrapper.querySelector('.left');
+	this.elem.rightNav = this.elem.galleryWrapper.querySelector('.right');
+	this.elem.toggleNav = this.elem.galleryWrapper.querySelectorAll('.togglenav-link');
+	this.elem.currentActiveToggle = this.elem.galleryWrapper.querySelector('.togglenav-link.active');
 
-    // The properties
-    this.props.currentSlide = 0;
-    this.props.totalSlides = this.elem.slides.length;
-    this.props.slideWidth = this.elem.gallery.clientWidth;
+	// The properties
+	this.props.currentSlide = 0;
+	this.props.totalSlides = this.elem.slides.length;
+	this.props.slideWidth = this.elem.gallery.clientWidth;
 
-    // The hammer (touch)
-    this.hammer = new Hammer(this.elem.gallery, {preventDefault: true});
+	// The hammer (touch)
+	this.hammer = new Hammer(this.elem.gallery, {preventDefault: true});
 };
 
 /**
  * Add transitions to the elems that need them to animate the slides
  */
 proto._addTransitions = function() {
-    this.elem.gallery.style.transition = 'transform ' + this.settings.duration + 'ms ' + this.settings.ease;
+	this.elem.gallery.style.transition = 'transform ' + this.settings.duration + 'ms ' + this.settings.ease;
 };
 
 /**
@@ -106,26 +110,30 @@ proto._removeTransitions = function() {
 };
 
 proto._addListeners = function() {
+	var i = this.props.totalSlides;
 	// Click events
-    this.elem.leftNav.addEventListener('click', this.moveLeft);
-    this.elem.rightNav.addEventListener('click', this.moveRight);
+	this.elem.leftNav.addEventListener('click', this.moveLeft);
+	this.elem.rightNav.addEventListener('click', this.moveRight);
+	while (i--) {
+		this.elem.toggleNav[i].addEventListener('click', this.moveToPosition);
+	}
 
-    // Hammer events
-    this.hammer.on('pan', this._galleryPan);
-    this.hammer.on('panend', this._galleryPanEnd);
+	// Hammer events
+	this.hammer.on('pan', this._galleryPan);
+	this.hammer.on('panend', this._galleryPanEnd);
 
-    // Resize event
-    window.addEventListener('resize', this._onResize);
+	// Resize event
+	window.addEventListener('resize', this._onResize);
 };
 
 proto._removeListeners = function() {
 	// Click events
 	this.elem.leftNav.removeEventListener('click', this.moveLeft);
-    this.elem.rightNav.removeEventListener('click', this.moveRight);
+	this.elem.rightNav.removeEventListener('click', this.moveRight);
 
-    // Hammer events
-    this.hammer.off('pan', this._galleryPan);
-    this.hammer.off('panend', this._galleryPanEnd);
+	// Hammer events
+	this.hammer.off('pan', this._galleryPan);
+	this.hammer.off('panend', this._galleryPanEnd);
 };
 
 /**
@@ -133,12 +141,12 @@ proto._removeListeners = function() {
  */
 proto.moveLeft = function(e) {
 	this._addTransitions();
-    if (this.props.currentSlide === 0) {
-        return false;
-    }
-    this.props.currentSlide--;
-    this.elem.gallery.style.transform = 'translateX(' + -(this.props.currentSlide * this.props.slideWidth) + 'px)';
-    this._checkForPaddles();
+	if (this.props.currentSlide === 0) {
+		return false;
+	}
+	this.props.currentSlide--;
+	this.elem.gallery.style.transform = 'translateX(' + -(this.props.currentSlide * this.props.slideWidth) + 'px)';
+	this._checkNav();
 };
 
 /**
@@ -146,12 +154,22 @@ proto.moveLeft = function(e) {
  */
 proto.moveRight = function(e) {
 	this._addTransitions();
-    if (this.props.currentSlide >= this.props.totalSlides-1) {
-        return false;
-    }
-    this.props.currentSlide++;
-    this._updateTransform(this.props.currentSlide, this.props.slideWidth);
-    this._checkForPaddles();
+	if (this.props.currentSlide >= this.props.totalSlides-1) {
+		return false;
+	}
+	this.props.currentSlide++;
+	this._updateTransform();
+	this._checkNav();
+};
+
+/**
+ * Move gallery to position automatically (when togglenav is clicked)
+ */
+proto.moveToPosition = function(e) {
+	e.preventDefault();
+	this.props.currentSlide = Array.prototype.slice.call(this.elem.toggleNav).indexOf(e.target);
+	this._updateTransform();
+	this._checkNav();
 };
 
 /**
@@ -159,7 +177,8 @@ proto.moveRight = function(e) {
  */
 proto.moveToCurrent = function() {
 	this._addTransitions();
-	this._updateTransform(this.props.currentSlide, this.props.slideWidth);
+	this._updateTransform();
+	this._checkNav();
 };
 
 /**
@@ -167,7 +186,7 @@ proto.moveToCurrent = function() {
  */
 proto._galleryPan = function(e) {
 	this._removeTransitions();
-	this._updateTransform(this.props.currentSlide, this.props.slideWidth, e.deltaX);
+	this._updateTransform(e.deltaX);
 };
 
 /**
@@ -176,9 +195,9 @@ proto._galleryPan = function(e) {
  * @param  {Float} slideWidth   [The width of the slide]
  * @param  {Float} deltaX       The delta x value of the mouse
  */
-proto._updateTransform = function(currentSlide, slideWidth, deltaX) {
+proto._updateTransform = function(deltaX) {
 	deltaX = deltaX || 0;
-	this.elem.gallery.style.transform = 'translateX(' + (deltaX - (currentSlide * slideWidth)) + 'px)';
+	this.elem.gallery.style.transform = 'translateX(' + (deltaX - (this.props.currentSlide * this.props.slideWidth)) + 'px)';
 };
 
 /**
@@ -212,25 +231,33 @@ proto._galleryPanEnd = function(e) {
 /**
  * Check if we should hide/show the paddles
  */
-proto._checkForPaddles = function() {
+proto._checkNav = function() {
+	// The Paddle Navs
 	if (this.props.currentSlide == 0) {
+		this.elem.rightNav.style.opacity = 1;
 		this.elem.leftNav.style.opacity = 0;
 	}
 	else if (this.props.currentSlide >= this.props.totalSlides-1) {
+		this.elem.leftNav.style.opacity = 1;
 		this.elem.rightNav.style.opacity = 0;
 	}
 	else {
 		this.elem.leftNav.style.opacity = 1;
 		this.elem.rightNav.style.opacity = 1;
 	}
+	// The Toggle Navs
+
+	this.elem.currentActiveToggle.classList.remove('active');
+	this.elem.currentActiveToggle = this.elem.toggleNav[this.props.currentSlide];
+	this.elem.currentActiveToggle.classList.add('active');
 };
 
 /**
  * Resizing function, recalculate the slide width and run the transform with this new width
  */
 proto._onResize = function(e) {
-    this.props.slideWidth = this.elem.gallery.clientWidth;
-    this._updateTransform(this.props.currentSlide, this.props.slideWidth);
+	this.props.slideWidth = this.elem.gallery.clientWidth;
+	this._updateTransform();
 };
 
 /**
@@ -240,9 +267,9 @@ proto.destroy = function() {
 	this._removeListeners();
 	this.hammer.destroy();
 	this.settings = null;
-    this.props = null;
-    this.elem = null;
-    this.hammer = null;
+	this.props = null;
+	this.elem = null;
+	this.hammer = null;
 };
 
 module.exports = Gallery;

@@ -5,9 +5,15 @@ var gallery = require( './../gallery.js' );
 
 var Main = (function() {
 
+	var slideGallery,
+		fadeGallery;
+
 	return {
 		init : function() {
-			window.testGallery = new gallery('.gallery-wrapper');
+			slideGallery = new gallery('#gallery-wrapper');
+			fadeGallery = new gallery('#gallery-wrapper-fade', {
+				isSlide: false
+			});
 			return this;
 		}
 	};

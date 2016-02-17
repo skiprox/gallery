@@ -41,6 +41,8 @@ function SimpleGallery(containerEl, obj) {
 	// Referencing the bound listeners
 	this.moveLeft = this.moveLeft.bind(this);
 	this.moveRight = this.moveRight.bind(this);
+	this.moveLeftClicked = this.moveLeftClicked.bind(this);
+	this.moveRightClicked = this.moveRightClicked.bind(this);
 	this.moveToPosition = this.moveToPosition.bind(this);
 	this._galleryPan = this._galleryPan.bind(this);
 	this._galleryPanEnd = this._galleryPanEnd.bind(this);

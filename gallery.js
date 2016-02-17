@@ -129,8 +129,8 @@ proto._addListeners = function() {
 	var i = this.props.totalSlides;
 
 	// Click events
-	this.elem.leftNav.addEventListener('click', this.moveLeft);
-	this.elem.rightNav.addEventListener('click', this.moveRight);
+	this.elem.leftNav.addEventListener('click', this.moveLeftClicked);
+	this.elem.rightNav.addEventListener('click', this.moveRightClicked);
 	while (i--) {
 		this.elem.toggleNav[i].addEventListener('click', this.moveToPosition);
 	}
@@ -149,8 +149,8 @@ proto._removeListeners = function() {
 	var i = this.props.totalSlides;
 
 	// Click events
-	this.elem.leftNav.removeEventListener('click', this.moveLeft);
-	this.elem.rightNav.removeEventListener('click', this.moveRight);
+	this.elem.leftNav.removeEventListener('click', this.moveLeftClicked);
+	this.elem.rightNav.removeEventListener('click', this.moveRightClicked);
 	while (i--) {
 		this.elem.toggleNav[i].removeEventListener('click', this.moveToPosition);
 	}
@@ -165,11 +165,20 @@ proto._removeListeners = function() {
 	window.removeEventListener('resize', this._onResize);
 };
 
+proto.moveRightClicked = function(e) {
+	e.preventDefault();
+	this.moveRight();
+};
+
+proto.moveLeftClicked = function(e) {
+	e.preventDefault();
+	this.moveLeft();
+};
+
 /**
  * Move the gallery to the left, if applicable
  */
 proto.moveLeft = function(e) {
-	e.preventDefault();
 	this._addPreTransitions();
 	if (this.props.currentSlide === 0) {
 		return false;
@@ -189,7 +198,6 @@ proto.moveLeft = function(e) {
  * Move the gallery to the right, if applicable
  */
 proto.moveRight = function(e) {
-	e.preventDefault();
 	this._addPreTransitions();
 	if (this.props.currentSlide >= this.props.totalSlides-1) {
 		return false;

@@ -17,8 +17,10 @@
   },
   "homepage": "https://github.com/skiprox/gallery#readme",
   "devDependencies": {
+    "gallery": "git+ssh://git@github.com/skiprox/gallery.git",
     "grunt": "^0.4.5",
     "grunt-browserify": "^4.0.1",
+    "grunt-contrib-watch": "^0.6.1",
     "load-grunt-tasks": "^3.4.0"
   }
 }

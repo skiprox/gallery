@@ -70,8 +70,9 @@ ul, li {
 	width: 80px;
 	height: 80px;
 	display: block;
-	background-color: #2B00F7;
+	background-color: white;
 	border-radius: 4px;
+	border: 1px solid black;
 	position: absolute;
 	margin-top: -40px;
 	margin-left: -40px;
@@ -85,9 +86,9 @@ ul, li {
 	right: -40px;
 }
 .left:before, .right:before {
-	color: white;
+	color: black;
 	font-size: 4em;
-	line-height: 1.25;
+	line-height: 1.14;
 	width: 100%;
 	text-align: center;
 	display: block;
@@ -100,4 +101,15 @@ ul, li {
 }
 .togglenav {
 	text-align:center;
+	margin-top: 1em;
+}
+.togglenav-link {
+	padding: 1em;
+}
+.togglenav-link.active {
+	color: black;
+}
+.togglenav-link.active:hover {
+	color: black;
+	text-decoration: none;
 }

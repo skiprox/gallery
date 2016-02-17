@@ -169,6 +169,7 @@ proto._removeListeners = function() {
  * Move the gallery to the left, if applicable
  */
 proto.moveLeft = function(e) {
+	e.preventDefault();
 	this._addPreTransitions();
 	if (this.props.currentSlide === 0) {
 		return false;
@@ -188,6 +189,7 @@ proto.moveLeft = function(e) {
  * Move the gallery to the right, if applicable
  */
 proto.moveRight = function(e) {
+	e.preventDefault();
 	this._addPreTransitions();
 	if (this.props.currentSlide >= this.props.totalSlides-1) {
 		return false;

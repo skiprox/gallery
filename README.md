@@ -1,5 +1,7 @@
 # gallery
 
+[Check out the examples!](http://skiprox.github.io/gallery/)
+
 A way to create galleries with touch support.
 
 
@@ -47,5 +49,5 @@ See examples/index.html
 ## Necessary Changes/Improvements
 
 * Get rid of hammerjs npm requirement, just use standard touch events.
-* Clean up markup to 
+* Clean up markup to
 

@@ -9,7 +9,10 @@ var App = (function() {
 		fadeGallery;
 
 	var createGalleries = function() {
-		slideGallery = new Gallery('#gallery-wrapper');
+		slideGallery = new Gallery('#slide-gallery-wrapper');
+		fadeGallery = new Gallery('#fade-gallery-wrapper', {
+			isSlide: false
+		});
 	};
 
 	return {

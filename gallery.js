@@ -36,7 +36,7 @@ function SimpleGallery(containerEl, obj) {
 
 	// Add necessary styles
 	this._addPreTransitions();
-	this.elem.leftNav.style.opacity = 0;
+	this.elem.rightNav.classList.add('active');
 
 	// Referencing the bound listeners
 	this.moveLeft = this.moveLeft.bind(this);
@@ -312,16 +312,16 @@ proto._galleryPanEnd = function(e) {
 proto._checkNav = function() {
 	// The Paddle Navs
 	if (this.props.currentSlide == 0) {
-		this.elem.rightNav.style.opacity = 1;
-		this.elem.leftNav.style.opacity = 0;
+		this.elem.rightNav.classList.add('active');
+		this.elem.leftNav.classList.remove('active');
 	}
 	else if (this.props.currentSlide >= this.props.totalSlides-1) {
-		this.elem.leftNav.style.opacity = 1;
-		this.elem.rightNav.style.opacity = 0;
+		this.elem.leftNav.classList.add('active');
+		this.elem.rightNav.classList.remove('active');
 	}
 	else {
-		this.elem.leftNav.style.opacity = 1;
-		this.elem.rightNav.style.opacity = 1;
+		this.elem.leftNav.classList.add('active');
+		this.elem.rightNav.classList.add('active');
 	}
 
 	// The Toggle Navs

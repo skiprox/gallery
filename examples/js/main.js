@@ -62,11 +62,13 @@ function SimpleGallery(containerEl, obj) {
 
 	// Add necessary styles
 	this._addPreTransitions();
-	this.elem.leftNav.style.opacity = 0;
+	this.elem.rightNav.classList.add('active');
 
 	// Referencing the bound listeners
 	this.moveLeft = this.moveLeft.bind(this);
 	this.moveRight = this.moveRight.bind(this);
+	this.moveLeftClicked = this.moveLeftClicked.bind(this);
+	this.moveRightClicked = this.moveRightClicked.bind(this);
 	this.moveToPosition = this.moveToPosition.bind(this);
 	this._galleryPan = this._galleryPan.bind(this);
 	this._galleryPanEnd = this._galleryPanEnd.bind(this);
@@ -155,8 +157,8 @@ proto._addListeners = function() {
 	var i = this.props.totalSlides;
 
 	// Click events
-	this.elem.leftNav.addEventListener('click', this.moveLeft);
-	this.elem.rightNav.addEventListener('click', this.moveRight);
+	this.elem.leftNav.addEventListener('click', this.moveLeftClicked);
+	this.elem.rightNav.addEventListener('click', this.moveRightClicked);
 	while (i--) {
 		this.elem.toggleNav[i].addEventListener('click', this.moveToPosition);
 	}
@@ -175,8 +177,8 @@ proto._removeListeners = function() {
 	var i = this.props.totalSlides;
 
 	// Click events
-	this.elem.leftNav.removeEventListener('click', this.moveLeft);
-	this.elem.rightNav.removeEventListener('click', this.moveRight);
+	this.elem.leftNav.removeEventListener('click', this.moveLeftClicked);
+	this.elem.rightNav.removeEventListener('click', this.moveRightClicked);
 	while (i--) {
 		this.elem.toggleNav[i].removeEventListener('click', this.moveToPosition);
 	}
@@ -189,6 +191,16 @@ proto._removeListeners = function() {
 
 	// Resize event
 	window.removeEventListener('resize', this._onResize);
+};
+
+proto.moveRightClicked = function(e) {
+	e.preventDefault();
+	this.moveRight();
+};
+
+proto.moveLeftClicked = function(e) {
+	e.preventDefault();
+	this.moveLeft();
 };
 
 /**
@@ -326,16 +338,16 @@ proto._galleryPanEnd = function(e) {
 proto._checkNav = function() {
 	// The Paddle Navs
 	if (this.props.currentSlide == 0) {
-		this.elem.rightNav.style.opacity = 1;
-		this.elem.leftNav.style.opacity = 0;
+		this.elem.rightNav.classList.add('active');
+		this.elem.leftNav.classList.remove('active');
 	}
 	else if (this.props.currentSlide >= this.props.totalSlides-1) {
-		this.elem.leftNav.style.opacity = 1;
-		this.elem.rightNav.style.opacity = 0;
+		this.elem.leftNav.classList.add('active');
+		this.elem.rightNav.classList.remove('active');
 	}
 	else {
-		this.elem.leftNav.style.opacity = 1;
-		this.elem.rightNav.style.opacity = 1;
+		this.elem.leftNav.classList.add('active');
+		this.elem.rightNav.classList.add('active');
 	}
 
 	// The Toggle Navs

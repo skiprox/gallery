@@ -288,7 +288,6 @@ proto._establishObjectProperties = function(containerEl, obj) {
 
 	// The hammer (touch)
 	if (this.settings.isSlide) {
-		console.log('should have touch');
 		this.hammer = new Hammer(this.elem.gallery, {preventDefault: true});
 	}
 };
@@ -540,8 +539,9 @@ proto._checkNav = function() {
  */
 proto._onResize = function(e) {
 	this.props.slideWidth = this.elem.gallery.clientWidth;
-	console.log(this.props.slideWidth, this.elem.gallery.clientWidth);
-	this._updateTransform();
+	if (this.settings.isSlide) {
+		this._updateTransform();
+	}
 };
 
 /**

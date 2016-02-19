@@ -5,13 +5,23 @@
 A way to create galleries with touch support.
 
 
+### Gallery Options
+These are all options you can pass to the gallery. Only the query string for the container element is required.
+
+* `containerEl [String]` – The query string for the container element.
+* `obj [Object]` - Object containing all the other options, listed below.
+* `*** ease [String]` - The ease to apply to the transitions on the gallery elements.
+* `*** duration [Float]` - The duration of the transition between slides.
+* `*** threshold [Float]` – The threshold at which moving the slide will trigger the next slide.
+* `*** isSlide [Boolean]` – Whether the gallery is a slide gallery or a fade gallery.
+
 
 ### Public Gallery Methods
-List all public methods here.  CamelCase method names.  Do not include private methods.
+These are all the public methods for gallery.
 
 * `Gallery.moveLeft` - move the gallery to the left
 * `Gallery.moveRight` - move the gallery to the right
-* `Gallery.moveToCurrent` - move the gallery back to the current slide
+* `Gallery.moveToSlide` - move the gallery to the specified slide
 
 
 

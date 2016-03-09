@@ -23,19 +23,8 @@
     "start": "node gallery",
     "test": "jshint --verbose gallery.js examples/main.js; jshint --config=.jshintpkg package.json"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/kettle/gallery"
-  },
-  "homepage": "https://github.com/kettle/gallery",
-  "bugs": {
-    "url": "https://github.com/kettle/gallery/issues"
-  },
   "author": "skiprox <seanmichaelscanlan@gmail.com>",
-  "publishConfig": {
-    "registry": "http://npm.kettlenyc.com:4873/"
-  },
-  "license": "© 2014 Kettle Solutions, LLC",
+  "license": "MIT",
   "engine": {
     "node": ">=0.6"
   }

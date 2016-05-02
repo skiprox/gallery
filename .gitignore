@@ -3,3 +3,4 @@ empty
 .svn
 node_modules
 npm-debug.log
+examples/js

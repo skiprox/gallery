@@ -9,7 +9,8 @@ var defaultValues = {
 	ease: 'ease',
 	duration: 600,
 	threshold: 0.5,
-	isSlide: true
+	isSlide: true,
+	hasTouch: true
 };
 
 /**
@@ -82,7 +83,7 @@ proto._establishObjectProperties = function(containerEl, obj) {
 	this.props.slideWidth = this.elem.gallery.clientWidth;
 
 	// The hammer (touch)
-	if (this.settings.isSlide) {
+	if (this.settings.hasTouch) {
 		this.hammer = new Hammer(this.elem.gallery, {preventDefault: true});
 	}
 };
@@ -137,7 +138,7 @@ proto._addListeners = function() {
 	}
 
 	// Hammer events
-	if (this.settings.isSlide) {
+	if (this.settings.hasTouch) {
 		this.hammer.on('pan', this._galleryPan);
 		this.hammer.on('panend', this._galleryPanEnd);
 	}
@@ -157,7 +158,7 @@ proto._removeListeners = function() {
 	}
 
 	// Hammer events
-	if (this.settings.isSlide) {
+	if (this.settings.hasSlide) {
 		this.hammer.off('pan', this._galleryPan);
 		this.hammer.off('panend', this._galleryPanEnd);
 	}
@@ -253,7 +254,9 @@ proto.moveToCurrent = function() {
  */
 proto._galleryPan = function(e) {
 	this._removeTransitions();
-	this._updateTransform(e.deltaX);
+	if (this.settings.isSlide) {
+		this._updateTransform(e.deltaX);
+	}
 };
 
 /**

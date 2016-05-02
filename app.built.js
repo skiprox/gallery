@@ -214,7 +214,8 @@ var defaultValues = {
 	ease: 'ease',
 	duration: 600,
 	threshold: 0.5,
-	isSlide: true
+	isSlide: true,
+	hasTouch: true
 };
 
 /**
@@ -246,9 +247,9 @@ function SimpleGallery(containerEl, obj) {
 	// Referencing the bound listeners
 	this.moveLeft = this.moveLeft.bind(this);
 	this.moveRight = this.moveRight.bind(this);
-	this.moveLeftClicked = this.moveLeftClicked.bind(this);
-	this.moveRightClicked = this.moveRightClicked.bind(this);
-	this.moveToPosition = this.moveToPosition.bind(this);
+	this._moveLeftClicked = this._moveLeftClicked.bind(this);
+	this._moveRightClicked = this._moveRightClicked.bind(this);
+	this._moveToPosition = this._moveToPosition.bind(this);
 	this._galleryPan = this._galleryPan.bind(this);
 	this._galleryPanEnd = this._galleryPanEnd.bind(this);
 	this._onResize = this._onResize.bind(this);
@@ -287,7 +288,7 @@ proto._establishObjectProperties = function(containerEl, obj) {
 	this.props.slideWidth = this.elem.gallery.clientWidth;
 
 	// The hammer (touch)
-	if (this.settings.isSlide) {
+	if (this.settings.hasTouch) {
 		this.hammer = new Hammer(this.elem.gallery, {preventDefault: true});
 	}
 };
@@ -335,14 +336,14 @@ proto._addListeners = function() {
 	var i = this.props.totalSlides;
 
 	// Click events
-	this.elem.leftNav.addEventListener('click', this.moveLeftClicked);
-	this.elem.rightNav.addEventListener('click', this.moveRightClicked);
+	this.elem.leftNav.addEventListener('click', this._moveLeftClicked);
+	this.elem.rightNav.addEventListener('click', this._moveRightClicked);
 	while (i--) {
-		this.elem.toggleNav[i].addEventListener('click', this.moveToPosition);
+		this.elem.toggleNav[i].addEventListener('click', this._moveToPosition);
 	}
 
 	// Hammer events
-	if (this.settings.isSlide) {
+	if (this.settings.hasTouch) {
 		this.hammer.on('pan', this._galleryPan);
 		this.hammer.on('panend', this._galleryPanEnd);
 	}
@@ -355,14 +356,14 @@ proto._removeListeners = function() {
 	var i = this.props.totalSlides;
 
 	// Click events
-	this.elem.leftNav.removeEventListener('click', this.moveLeftClicked);
-	this.elem.rightNav.removeEventListener('click', this.moveRightClicked);
+	this.elem.leftNav.removeEventListener('click', this._moveLeftClicked);
+	this.elem.rightNav.removeEventListener('click', this._moveRightClicked);
 	while (i--) {
-		this.elem.toggleNav[i].removeEventListener('click', this.moveToPosition);
+		this.elem.toggleNav[i].removeEventListener('click', this._moveToPosition);
 	}
 
 	// Hammer events
-	if (this.settings.isSlide) {
+	if (this.settings.hasSlide) {
 		this.hammer.off('pan', this._galleryPan);
 		this.hammer.off('panend', this._galleryPanEnd);
 	}
@@ -371,12 +372,12 @@ proto._removeListeners = function() {
 	window.removeEventListener('resize', this._onResize);
 };
 
-proto.moveRightClicked = function(e) {
+proto._moveRightClicked = function(e) {
 	e.preventDefault();
 	this.moveRight();
 };
 
-proto.moveLeftClicked = function(e) {
+proto._moveLeftClicked = function(e) {
 	e.preventDefault();
 	this.moveLeft();
 };
@@ -422,10 +423,19 @@ proto.moveRight = function(e) {
 /**
  * Move gallery to position automatically (when togglenav is clicked)
  */
-proto.moveToPosition = function(e) {
+proto._moveToPosition = function(e) {
 	e.preventDefault();
 	this.props.previousSlide = this.props.currentSlide;
 	this.props.currentSlide = Array.prototype.slice.call(this.elem.toggleNav).indexOf(e.target);
+	this.moveToSlide(this.props.previousSlide, this.props.currentSlide);
+};
+
+/**
+ * Public function to moving to specific slide
+ * @param  {Int} previousSlide [Slide number of where we are]
+ * @param  {Int} currentSlide  [Slide number of where we want to move]
+ */
+proto.moveToSlide = function(previousSlide, currentSlide) {
 	if (this.settings.isSlide) {
 		this._updateTransform();
 	}
@@ -449,7 +459,9 @@ proto.moveToCurrent = function() {
  */
 proto._galleryPan = function(e) {
 	this._removeTransitions();
-	this._updateTransform(e.deltaX);
+	if (this.settings.isSlide) {
+		this._updateTransform(e.deltaX);
+	}
 };
 
 /**
